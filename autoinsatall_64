@@ -552,49 +552,6 @@ add_guest_user()
 	fi
 }
 
-install_zfs()
-{
-	#
-	# install zfs into kernel 
-	#     
-	#mkdir -p ${TMP_DIR}
-	#cd ${TMP_DIR}
-	
-	#apt-get -y install lsb-release
-	#wget http://archive.zfsonlinux.org/debian/pool/main/z/zfsonlinux/zfsonlinux_6_all.deb
-	#dpkg -i zfsonlinux_6_all.deb
-	
-	#apt-get update
-	#apt-get -y install debian-zfs
-	
-	#if [ $? -eq 0 ];then
-	#	echo ""
-	#	echo "Install ZFS Success!"
-	#else
-	#	echo ""
-	#	echo "Install ZFS Error!"
-	#fi
-	
-	##clean up
-	#cd ..
-	#rm -rf ${TMP_DIR}
-	
-	cd /
-	
-	chkconfig -s zfs-import on
-	chkconfig -s zfs-mount on
-	chkconfig -s zfs-zed on
-	chkconfig -s zfs-share on
-	
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Set ZFS Success!"
-	else
-		echo ""
-		echo "Set ZFS Error!"
-	fi
-}
-
 set_ssdp_autorun()
 {
 	#first method is not good enough
@@ -686,9 +643,6 @@ apt-get update
 
 banner "Install Applications"
 install_apps
-
-banner "Install ZFS"
-install_zfs
 
 banner "Install Python"
 install_python
