@@ -6,6 +6,7 @@
 APT_SOURCES_LIST=/etc/apt/sources.list
 AUTORUN_SCRIPT=/etc/init.d/rc.local
 
+#jessie has no proper repository for netatalk right now!
 FTP_DEFAULT_NAME=proftpd.conf
 UPDATE_VERSION_DEFAULT_NAME=version
 UPDATE_GUIDE_DEFAULT_NAME=mininasupguide.sh
@@ -13,11 +14,9 @@ RESET_GUIDE_DEFAULT_NAME=mininasrfsguide.sh
 RESET_CHECK_DEFAULT_NAME=mininasrfsstatuscheck.sh
 CMDLINE_DEFAULT_NAME=cmdline
 SAMBA_DEFAULT_NAME=smb.conf
-TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
-TIMEMACHINE_RELY_DEFAULT_NAME=avahi-daemon.conf
+#TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
+#TIMEMACHINE_RELY_DEFAULT_NAME=avahi-daemon.conf
 DLNA_DEFAULT_NAME=minidlna.conf
-#IP_DEFAULT_NAME=interfaces
-#DNS_DEFAULT_NAME=resolv.conf
 LASTEST_UPDATE_VERSION_DEFAULT_NAME=luv
 HARDVERSION_DEFAULT_NAME=hardversion
 UPDATE_STATUS_DEFAULT_NAME=updatestatus.txt
@@ -39,11 +38,9 @@ RESET_CHECK_DEFAULT_PATH=/etc/mininas/rfs/
 RESET_CHECK_RUN_PATH_NAME=/etc/mininas/rfs/mininasrfsstatuscheck.sh
 CMDLINE_DEFAULT_PATH=/boot/
 SAMBA_DEFAULT_PATH=/etc/samba/
-TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
-TIMEMACHINE_RELY_DEFAULT_PATH=/etc/avahi/
+#TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
+#TIMEMACHINE_RELY_DEFAULT_PATH=/etc/avahi/
 DLNA_DEFAULT_PATH=/etc/
-#IP_DEFAULT_PATH=/etc/network/
-#DNS_DEFAULT_PATH=/etc/
 LASTEST_UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
 HARDVERSION_DEFAULT_PATH=/etc/mininas/
 UPDATE_STATUS_DEFAULT_PATH=/mnt/
@@ -60,37 +57,26 @@ OPERATE_WITHOUT_EXPECT_DEFAULT_PATH=/usr/local/sbin/
 SSDP_RUN_PATH=/usr/local/sbin/
 SSDP_RUN_PATH_NAME=/usr/local/sbin/ssdp
 
-#PYTHON_SVN=https://192.168.5.40/svn/PythonWebProject/trunk
-#UGLY_PYTHON_SVN_HEADER=trunk
 PYTHON_SVN=https://192.168.5.40/svn/PythonWebProject/branches/release 
 PYTHON_SVN_VERSION=1194
 UGLY_PYTHON_SVN_HEADER=release
 
 PYTHON_PATH=/srv/mini/
 PYTHON_PATH_UGLY=/srv/mini/aaa/
-#PYTHON_WEB_RUN_PATH_NAME=python /srv/mini/aaa/manage.py runserver 0.0.0.0:80 &
 PYTHON_WEB_RUN_PATH_NAME=/srv/mini/aaa/
 PYTHON_UPDATE_DAEMON_RUN_PATH_NAME=/srv/mini/
 
 SETUPTOOLS_SOURCE_PATH=http://mirrors.aliyun.com/pypi/simple/
 
-#THUNDER_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/tags/system1.1/xware
 THUNDER_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/release/xware
 THUNDER_SVN_VERSION=158
 THUNDER_PATH=/xware
 THUNDER_PORTAL=/xware/portal
 
-#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/tags/system1.1/configureBack
-#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/trunk/configureBack
-#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/release/configureBack
 CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/stage/configureBack
 CONFIG_SVN_VERSION=196
 UGLY_CONFIG_SVN_HEADER=configureBack
 
-#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/tags/ssdp1.0.0/build
-#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/trunk
-#UGLY_SSDP_SVN_HEADER=trunk
-#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/branches/release
 SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/branches/stage
 SSDP_SVN_VERSION=45
 UGLY_SSDP_SVN_HEADER=stage
@@ -136,10 +122,10 @@ set_apt_sourceslist()
 	#
 	# create new one
 	#
-	echo "deb http://mirrors.aliyun.com/debian/ wheezy main contrib non-free" > $APT_SOURCES_LIST
-	echo "deb http://mirrors.aliyun.com/debian-security/ wheezy/updates main contrib non-free" >> $APT_SOURCES_LIST
-	echo "deb http://mirrors.aliyun.com/debian/ wheezy-updates main contrib non-free" >> $APT_SOURCES_LIST
-	echo "deb http://mirrors.aliyun.com/debian/ wheezy-backports main contrib non-free" >> $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian/ jessie main contrib non-free" > $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian-security/ jessie/updates main contrib non-free" >> $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian/ jessie-updates main contrib non-free" >> $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian/ jessie-backports main contrib non-free" >> $APT_SOURCES_LIST
 
 	echo ""
 	echo "Set APT SourcesList Success!"
@@ -150,7 +136,10 @@ install_apps()
 	mkdir -p ${TMP_DIR}
 	cd ${TMP_DIR}
 
-	apt-get -y --force-yes install subversion expect python=2.7.3-4+deb7u1 python-django=1.7.1-1~bpo70+1 python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo netatalk
+	apt-get -y --force-yes install subversion expect python python-django python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo
+	
+	#jessie has no proper repository for netatalk right now!
+	#apt-get -y --force-yes install netatalk
 
 	#install mysql
 	echo "mysql-server-5.5 mysql-server/root_password password ${MYSQL_PASSWORD}" | debconf-set-selections
@@ -270,25 +259,25 @@ arrange_apps_config()
 		echo "Install Samba Config Error!"
 	fi
 
-	mv ${TIMEMACHINE_DEFAULT_NAME} ${TIMEMACHINE_DEFAULT_PATH}
-	chmod 644 "${TIMEMACHINE_DEFAULT_PATH}/${TIMEMACHINE_DEFAULT_NAME}"
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Install TimeMachine Config Success!"
-	else
-		echo ""
-		echo "Install TimeMachine Config Error!"
-	fi
+	#mv ${TIMEMACHINE_DEFAULT_NAME} ${TIMEMACHINE_DEFAULT_PATH}
+	#chmod 644 "${TIMEMACHINE_DEFAULT_PATH}/${TIMEMACHINE_DEFAULT_NAME}"
+	#if [ $? -eq 0 ];then
+	#	echo ""
+	#	echo "Install TimeMachine Config Success!"
+	#else
+	#	echo ""
+	#	echo "Install TimeMachine Config Error!"
+	#fi
 
-	mv ${TIMEMACHINE_RELY_DEFAULT_NAME} ${TIMEMACHINE_RELY_DEFAULT_PATH}
-	chmod 644 "${TIMEMACHINE_RELY_DEFAULT_PATH}/${TIMEMACHINE_RELY_DEFAULT_NAME}"
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Install TimeMachine Rely Config Success!"
-	else
-		echo ""
-		echo "Install TimeMachine Rely Config Error!"
-	fi
+	#mv ${TIMEMACHINE_RELY_DEFAULT_NAME} ${TIMEMACHINE_RELY_DEFAULT_PATH}
+	#chmod 644 "${TIMEMACHINE_RELY_DEFAULT_PATH}/${TIMEMACHINE_RELY_DEFAULT_NAME}"
+	#if [ $? -eq 0 ];then
+	#	echo ""
+	#	echo "Install TimeMachine Rely Config Success!"
+	#else
+	#	echo ""
+	#	echo "Install TimeMachine Rely Config Error!"
+	#fi
 
 	mv ${DLNA_DEFAULT_NAME} ${DLNA_DEFAULT_PATH}
 	chmod 644 "${DLNA_DEFAULT_PATH}/${DLNA_DEFAULT_NAME}"
@@ -457,6 +446,9 @@ install_python()
 	mv ${TMP_DIR}/${UGLY_PYTHON_SVN_HEADER}/* $PYTHON_PATH
 
 	cd ${PYTHON_PATH_UGLY}
+	
+	#jessie does not run server which already installed
+	service mysql start
 
 	mysql -u$MYSQL_ROOT -p$MYSQL_PASSWORD << EOF
 		CREATE DATABASE mininas DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
@@ -486,8 +478,8 @@ install_ssdp()
 	cd ${TMP_DIR}
 	echo t | svn checkout ${SSDP_SVN} --username $SVN_NAME --password $SVN_PASSWORD --quiet --no-auth-cache -r $SSDP_SVN_VERSION
 	cd ${UGLY_SSDP_SVN_HEADER}
-  make
-  cd ../ 
+	make
+	cd ../
 	mv ${TMP_DIR}/${UGLY_SSDP_SVN_HEADER}/ssdp ${SSDP_RUN_PATH}
 	chmod 755 "${SSDP_RUN_PATH}/ssdp"
 
