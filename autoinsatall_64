@@ -136,7 +136,7 @@ install_apps()
 	mkdir -p ${TMP_DIR}
 	cd ${TMP_DIR}
 
-	apt-get -y --force-yes install subversion expect python python-django python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo
+	apt-get -y --force-yes install subversion expect python python-django python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo libusb-1.0-0 libusb-1.0-0-dev
 	
 	#jessie has no proper repository for netatalk right now!
 	#apt-get -y --force-yes install netatalk
