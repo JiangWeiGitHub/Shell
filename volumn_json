@@ -1,0 +1,22 @@
+{
+	"version":"1.0.0",
+	"label":"winsun",
+	"uuid":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+	"mode":
+	[
+		{
+			"name":"single"
+		}
+	],
+	"subset":
+	[
+		{
+			"sub_uuid":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+			"disk":
+			{
+				"sn":"WDC_WD800BD-08MRA1_WD-WMAM9CJ37712",
+				"model":"WD-WMAM9CJ37712"
+			}
+		}
+	]
+}
