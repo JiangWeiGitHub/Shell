@@ -1,0 +1,729 @@
+#!/bin/bash
+
+#
+# define all paths
+#
+APT_SOURCES_LIST=/etc/apt/sources.list
+AUTORUN_SCRIPT=/etc/init.d/rc.local
+
+FTP_DEFAULT_NAME=proftpd.conf
+UPDATE_VERSION_DEFAULT_NAME=version
+UPDATE_GUIDE_DEFAULT_NAME=mininasupguide.sh
+RESET_GUIDE_DEFAULT_NAME=mininasrfsguide.sh
+RESET_CHECK_DEFAULT_NAME=mininasrfsstatuscheck.sh
+CMDLINE_DEFAULT_NAME=cmdline
+SAMBA_DEFAULT_NAME=smb.conf
+TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
+TIMEMACHINE_RELY_DEFAULT_NAME=avahi-daemon.conf
+DLNA_DEFAULT_NAME=minidlna.conf
+#IP_DEFAULT_NAME=interfaces
+#DNS_DEFAULT_NAME=resolv.conf
+LASTEST_UPDATE_VERSION_DEFAULT_NAME=luv
+HARDVERSION_DEFAULT_NAME=hardversion
+UPDATE_STATUS_DEFAULT_NAME=updatestatus.txt
+UPDATED_STARTER_SERVER_DEFAULT_NAME=updated-starter-server
+UPDATED_STARTER_DEFAULT_NAME=updated_starter.sh
+UPDATED_STARTER_CRON_DEFAULT_NAME=updated-starter-cron.sh
+POWERKEY_CHK_DEFAULT_NAME=powerkey_chk.sh
+WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME=ws_script_gpio_server
+WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_NAME=ws_script_gpio_server_cron.sh
+UPDATEDVERSION_DEFAULT_NAME=updatedversion
+REBOOT_DJANGO_DEFAULT_NAME=reboot_django.sh
+OPERATE_WITHOUT_EXPECT_DEFAULT_NAME=operate_without_expect.sh
+
+FTP_DEFAULT_PATH=/etc/proftpd/
+UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
+UPDATE_GUIDE_DEFAULT_PATH=/etc/mininas/update/
+RESET_GUIDE_DEFAULT_PATH=/etc/mininas/rfs/
+RESET_CHECK_DEFAULT_PATH=/etc/mininas/rfs/
+RESET_CHECK_RUN_PATH_NAME=/etc/mininas/rfs/mininasrfsstatuscheck.sh
+CMDLINE_DEFAULT_PATH=/boot/
+SAMBA_DEFAULT_PATH=/etc/samba/
+TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
+TIMEMACHINE_RELY_DEFAULT_PATH=/etc/avahi/
+DLNA_DEFAULT_PATH=/etc/
+#IP_DEFAULT_PATH=/etc/network/
+#DNS_DEFAULT_PATH=/etc/
+LASTEST_UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
+HARDVERSION_DEFAULT_PATH=/etc/mininas/
+UPDATE_STATUS_DEFAULT_PATH=/mnt/
+UPDATED_STARTER_SERVER_DEFAULT_PATH=/etc/init.d/
+UPDATED_STARTER_DEFAULT_PATH=/usr/local/bin/
+UPDATED_STARTER_CRON_DEFAULT_PATH=/usr/local/bin/
+POWERKEY_CHK_DEFAULT_PATH=/usr/local/bin/
+WS_SCRIPT_GPIO_SERVER_DEFAULT_PATH=/etc/init.d/
+WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH=/usr/local/bin/
+UPDATEDVERSION_DEFAULT_PATH=/etc/mininas/
+REBOOT_DJANGO_DEFAULT_PATH=/usr/local/sbin/
+OPERATE_WITHOUT_EXPECT_DEFAULT_PATH=/usr/local/sbin/
+
+SSDP_RUN_PATH=/usr/local/sbin/
+SSDP_RUN_PATH_NAME=/usr/local/sbin/ssdp
+
+#PYTHON_SVN=https://192.168.5.40/svn/PythonWebProject/trunk
+#UGLY_PYTHON_SVN_HEADER=trunk
+PYTHON_SVN=https://192.168.5.40/svn/PythonWebProject/branches/release 
+PYTHON_SVN_VERSION=1194
+UGLY_PYTHON_SVN_HEADER=release
+
+PYTHON_PATH=/srv/mini/
+PYTHON_PATH_UGLY=/srv/mini/aaa/
+#PYTHON_WEB_RUN_PATH_NAME=python /srv/mini/aaa/manage.py runserver 0.0.0.0:80 &
+PYTHON_WEB_RUN_PATH_NAME=/srv/mini/aaa/
+PYTHON_UPDATE_DAEMON_RUN_PATH_NAME=/srv/mini/
+
+SETUPTOOLS_SOURCE_PATH=http://mirrors.aliyun.com/pypi/simple/
+
+#THUNDER_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/tags/system1.1/xware
+THUNDER_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/release/xware
+THUNDER_SVN_VERSION=158
+THUNDER_PATH=/xware
+THUNDER_PORTAL=/xware/portal
+
+#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/tags/system1.1/configureBack
+#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/trunk/configureBack
+#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/release/configureBack
+CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/stage/configureBack
+CONFIG_SVN_VERSION=196
+UGLY_CONFIG_SVN_HEADER=configureBack
+
+#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/tags/ssdp1.0.0/build
+#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/trunk
+#UGLY_SSDP_SVN_HEADER=trunk
+#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/branches/release
+SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/branches/stage
+SSDP_SVN_VERSION=45
+UGLY_SSDP_SVN_HEADER=stage
+
+MYSQL_ROOT=root
+MYSQL_PASSWORD=wenshang
+SVN_NAME=jiangwei
+SVN_PASSWORD=123456
+
+ROOT_NAME=admin
+ROOT_PASSWORD=123456
+
+TMP_DIR=/install_tmp
+BACKUP_DEFAULT=/etc/backup
+
+set -e
+
+DASH="------------------------------"
+
+#
+# echo $1 in green color
+#
+highlight()
+{
+	echo -e "\e[32m\e[1m${1}\e[0m"
+}
+
+banner()
+{
+	echo ""
+	highlight $DASH
+	highlight "$1"
+	highlight $DASH
+}
+
+set_apt_sourceslist()
+{
+	#
+	# backup
+	#     
+	mv $APT_SOURCES_LIST $BACKUP_DEFAULT
+
+	#
+	# create new one
+	#
+	echo "deb http://mirrors.aliyun.com/debian/ wheezy main contrib non-free" > $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian-security/ wheezy/updates main contrib non-free" >> $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian/ wheezy-updates main contrib non-free" >> $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian/ wheezy-backports main contrib non-free" >> $APT_SOURCES_LIST
+
+	echo ""
+	echo "Set APT SourcesList Success!"
+}
+
+install_apps()
+{
+	mkdir -p ${TMP_DIR}
+	cd ${TMP_DIR}
+
+	apt-get -y --force-yes install subversion expect python=2.7.3-4+deb7u1 python-django=1.7.1-1~bpo70+1 python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo netatalk
+
+	#install mysql
+	echo "mysql-server-5.5 mysql-server/root_password password ${MYSQL_PASSWORD}" | debconf-set-selections
+	echo "mysql-server-5.5 mysql-server/root_password_again password ${MYSQL_PASSWORD}" | debconf-set-selections
+	apt-get -y install mysql-server-5.5
+	
+	#other installation for other python components
+	if [ $? -eq 0 ];then
+		easy_install -i ${SETUPTOOLS_SOURCE_PATH} ntplib pexpect eyeD3 django_debug_toolbar apscheduler
+	else
+		echo ""
+		echo "Install Python Components Applications Error!"
+	fi
+
+	if [ $? -eq 0 ];then
+		wget https://pypi.python.org/packages/source/p/psutil/psutil-3.2.1.tar.gz --no-check-certificate
+		tar zxvf psutil-3.2.1.tar.gz
+		cd psutil-3.2.1/
+		python setup.py install
+	else
+		echo ""
+		echo "Install Python Components Applications Error!"
+	fi
+
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Applications Success!"
+	else
+		echo ""
+		echo "Install Applications Error!"
+	fi
+	
+	#clean up
+	cd ..
+	rm -rf ${TMP_DIR}
+}
+
+arrange_apps_config()
+{
+	mkdir -p ${TMP_DIR}
+	cd ${TMP_DIR}
+	echo t | svn checkout $CONFIG_SVN --username $SVN_NAME --password $SVN_PASSWORD --quiet --no-auth-cache -r $CONFIG_SVN_VERSION
+	
+	cd ${UGLY_CONFIG_SVN_HEADER}
+	mv ${FTP_DEFAULT_NAME} ${FTP_DEFAULT_PATH}
+	chmod 755 "${FTP_DEFAULT_PATH}/${FTP_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install FTP Config Success!"
+	else
+		echo ""
+		echo "Install FTP Config Error!"
+	fi
+
+	mkdir -p ${UPDATE_VERSION_DEFAULT_PATH}
+	mv ${UPDATE_VERSION_DEFAULT_NAME} ${UPDATE_VERSION_DEFAULT_PATH}
+	chmod 755 "${UPDATE_VERSION_DEFAULT_PATH}/${UPDATE_VERSION_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Update Version Config Success!"
+	else
+		echo ""
+		echo "Install Update Version Config Error!"
+	fi
+
+	mkdir -p ${UPDATE_GUIDE_DEFAULT_PATH}
+	mv ${UPDATE_GUIDE_DEFAULT_NAME} ${UPDATE_GUIDE_DEFAULT_PATH}
+	chmod 755 "${UPDATE_GUIDE_DEFAULT_PATH}/${UPDATE_GUIDE_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Update Guide Config Success!"
+	else
+		echo ""
+		echo "Install Update Guide Config Error!"
+	fi
+
+	mkdir -p ${RESET_GUIDE_DEFAULT_PATH}
+	mv ${RESET_GUIDE_DEFAULT_NAME} ${RESET_GUIDE_DEFAULT_PATH}
+	chmod 755 "${RESET_GUIDE_DEFAULT_PATH}/${RESET_GUIDE_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Reset Guide Config Success!"
+	else
+		echo ""
+		echo "Install Reset Guide Config Error!"
+	fi
+
+	mkdir -p ${RESET_CHECK_DEFAULT_PATH}
+	mv ${RESET_CHECK_DEFAULT_NAME} ${RESET_CHECK_DEFAULT_PATH}
+	chmod 755 "${RESET_CHECK_DEFAULT_PATH}/${RESET_CHECK_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Reset Check Config Success!"
+	else
+		echo ""
+		echo "Install Reset Check Config Error!"
+	fi
+	
+	mkdir -p ${CMDLINE_DEFAULT_PATH}
+	mv ${CMDLINE_DEFAULT_NAME} ${CMDLINE_DEFAULT_PATH}
+	chmod 755 "${CMDLINE_DEFAULT_PATH}/${CMDLINE_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Reset Check Config Success!"
+	else
+		echo ""
+		echo "Install Reset Check Config Error!"
+	fi
+
+	mv ${SAMBA_DEFAULT_NAME} ${SAMBA_DEFAULT_PATH}
+	chmod 644 "${SAMBA_DEFAULT_PATH}/${SAMBA_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Samba Config Success!"
+	else
+		echo ""
+		echo "Install Samba Config Error!"
+	fi
+
+	mv ${TIMEMACHINE_DEFAULT_NAME} ${TIMEMACHINE_DEFAULT_PATH}
+	chmod 644 "${TIMEMACHINE_DEFAULT_PATH}/${TIMEMACHINE_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install TimeMachine Config Success!"
+	else
+		echo ""
+		echo "Install TimeMachine Config Error!"
+	fi
+
+	mv ${TIMEMACHINE_RELY_DEFAULT_NAME} ${TIMEMACHINE_RELY_DEFAULT_PATH}
+	chmod 644 "${TIMEMACHINE_RELY_DEFAULT_PATH}/${TIMEMACHINE_RELY_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install TimeMachine Rely Config Success!"
+	else
+		echo ""
+		echo "Install TimeMachine Rely Config Error!"
+	fi
+
+	mv ${DLNA_DEFAULT_NAME} ${DLNA_DEFAULT_PATH}
+	chmod 644 "${DLNA_DEFAULT_PATH}/${DLNA_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install DLNA Config Success!"
+	else
+		echo ""
+		echo "Install DLNA Config Error!"
+	fi
+	
+	mv ${LASTEST_UPDATE_VERSION_DEFAULT_NAME} ${LASTEST_UPDATE_VERSION_DEFAULT_PATH}
+	chmod 644 "${LASTEST_UPDATE_VERSION_DEFAULT_PATH}/${LASTEST_UPDATE_VERSION_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Lastest Update Version Config Success!"
+	else
+		echo ""
+		echo "Install Lastest Update Version Config Error!"
+	fi
+	
+	mv ${HARDVERSION_DEFAULT_NAME} ${HARDVERSION_DEFAULT_PATH}
+	chmod 644 "${HARDVERSION_DEFAULT_PATH}/${HARDVERSION_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Hard Version Config Success!"
+	else
+		echo ""
+		echo "Install Hard Version Config Error!"
+	fi
+	
+	mv ${UPDATE_STATUS_DEFAULT_NAME} ${UPDATE_STATUS_DEFAULT_PATH}
+	chmod 755 "${UPDATE_STATUS_DEFAULT_PATH}/${UPDATE_STATUS_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Updated Status Config Success!"
+	else
+		echo ""
+		echo "Install Updated Status Config Error!"
+	fi
+
+	mv ${UPDATED_STARTER_SERVER_DEFAULT_NAME} ${UPDATED_STARTER_SERVER_DEFAULT_PATH}
+	chmod 755 "${UPDATED_STARTER_SERVER_DEFAULT_PATH}/${UPDATED_STARTER_SERVER_DEFAULT_NAME}"
+	chkconfig -a ${UPDATED_STARTER_SERVER_DEFAULT_NAME}
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Updated Starter Server Success!"
+	else
+		echo ""
+		echo "Install Updated Starter Server Error!"
+	fi
+	
+	mv ${UPDATED_STARTER_DEFAULT_NAME} ${UPDATED_STARTER_DEFAULT_PATH}
+	chmod 755 "${UPDATED_STARTER_DEFAULT_PATH}/${UPDATED_STARTER_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install Updated Starter Success!"
+	else
+		echo ""
+		echo "Install Updated Starter Error!"
+	fi	
+	
+	mv ${UPDATED_STARTER_CRON_DEFAULT_NAME} ${UPDATED_STARTER_CRON_DEFAULT_PATH}
+	chmod 755 "${UPDATED_STARTER_CRON_DEFAULT_PATH}/${UPDATED_STARTER_CRON_DEFAULT_NAME}"
+	
+	echo ""
+	echo "*/10 * * * * /usr/local/bin/updated-starter-cron.sh"
+	echo ""	
+	crontab -e
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set Updated Starter Cron Success!"
+	else
+		echo ""
+		echo "Set Updated Starter Cron Error!"
+	fi
+	
+	mv ${POWERKEY_CHK_DEFAULT_NAME} ${POWERKEY_CHK_DEFAULT_PATH}
+	chmod 755 "${POWERKEY_CHK_DEFAULT_PATH}/${POWERKEY_CHK_DEFAULT_NAME}"
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set Powerkey CHK Success!"
+	else
+		echo ""
+		echo "Set Powerkey CHK Error!"
+	fi
+	
+	mv ${WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME} ${WS_SCRIPT_GPIO_SERVER_DEFAULT_PATH}
+	chmod 755 "${WS_SCRIPT_GPIO_SERVER_DEFAULT_PATH}/${WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME}"
+	
+	chkconfig -a ${WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME}
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set WS Script GPIO Server Success!"
+	else
+		echo ""
+		echo "Set WS Script GPIO Server Error!"
+	fi
+
+	mv ${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_NAME} ${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH}
+	chmod 755 "${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH}/${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_NAME}"
+	
+	echo ""
+	echo "*/10 * * * * /usr/local/bin/ws_script_gpio_server_cron.sh"
+	echo ""	
+	crontab -e
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set WS Script GPIO Server Cron Success!"
+	else
+		echo ""
+		echo "Set WS Script GPIO Server Cron Error!"
+	fi
+	
+	mv ${UPDATEDVERSION_DEFAULT_NAME} ${UPDATEDVERSION_DEFAULT_PATH}
+	chmod 755 "${UPDATEDVERSION_DEFAULT_PATH}/${UPDATEDVERSION_DEFAULT_NAME}"
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set Updatedversion Success!"
+	else
+		echo ""
+		echo "Set Updatedversion Error!"
+	fi
+	
+	mv ${REBOOT_DJANGO_DEFAULT_NAME} ${REBOOT_DJANGO_DEFAULT_PATH}
+	chmod 755 "${REBOOT_DJANGO_DEFAULT_PATH}/${REBOOT_DJANGO_DEFAULT_NAME}"
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set Reboot Django Success!"
+	else
+		echo ""
+		echo "Set Reboot Django Error!"
+	fi
+	
+	mv ${OPERATE_WITHOUT_EXPECT_DEFAULT_NAME} ${OPERATE_WITHOUT_EXPECT_DEFAULT_PATH}
+	chmod 755 "${OPERATE_WITHOUT_EXPECT_DEFAULT_PATH}/${OPERATE_WITHOUT_EXPECT_DEFAULT_NAME}"
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set Operate with expect sh Success!"
+	else
+		echo ""
+		echo "Set Operate with expect sh Error!"
+	fi
+	
+	echo ""
+	echo "Arrange Applications Config Success!"
+	
+	#clean up
+	cd ..
+	rm -rf ${TMP_DIR}
+}
+
+install_python()
+{
+	mkdir -p ${TMP_DIR}
+	mkdir -p $PYTHON_PATH
+	cd ${TMP_DIR}
+	echo t | svn checkout $PYTHON_SVN --username $SVN_NAME --password $SVN_PASSWORD --quiet --no-auth-cache -r $PYTHON_SVN_VERSION
+	mv ${TMP_DIR}/${UGLY_PYTHON_SVN_HEADER}/* $PYTHON_PATH
+
+	cd ${PYTHON_PATH_UGLY}
+
+	mysql -u$MYSQL_ROOT -p$MYSQL_PASSWORD << EOF
+		CREATE DATABASE mininas DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+EOF
+	python manage.py makemigrations
+	python manage.py migrate
+
+	mysql -u$MYSQL_ROOT -p$MYSQL_PASSWORD << EOF
+		use mininas;
+		insert into mini_syssetting (uploadrootpath,samba,ftp) value ("/mnt/",0,0);
+		insert into mini_user (UserName,Password,realname,email) value ("admin","123456","winsun","sdfawef@assd.net");
+		insert into mini_ntpinfo (address,port,refreshtime) value ("202.112.10.36",123,3600);
+EOF
+	#run python web server
+	#but not now
+	#python manage.py runserver 0.0.0.0:80 &
+	rm -rf ${TMP_DIR}
+	
+	#clean up
+	cd ..
+	rm -rf ${TMP_DIR}
+}
+
+install_ssdp()
+{
+	mkdir -p ${TMP_DIR}
+	cd ${TMP_DIR}
+	echo t | svn checkout ${SSDP_SVN} --username $SVN_NAME --password $SVN_PASSWORD --quiet --no-auth-cache -r $SSDP_SVN_VERSION
+	cd ${UGLY_SSDP_SVN_HEADER}
+  make
+  cd ../ 
+	mv ${TMP_DIR}/${UGLY_SSDP_SVN_HEADER}/ssdp ${SSDP_RUN_PATH}
+	chmod 755 "${SSDP_RUN_PATH}/ssdp"
+
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install SSDP Success!"
+	else
+		echo ""
+		echo "Install SSDP Error!"
+	fi
+	
+	#clean up
+	cd ..
+	rm -rf ${TMP_DIR}
+}
+
+add_admin_user()
+{
+	/usr/bin/expect << EOD
+
+	spawn adduser ${ROOT_NAME} --no-create-home
+    expect "New password:"
+    send "${ROOT_PASSWORD}\r"
+    expect "Retype new password:"
+    send "${ROOT_PASSWORD}\r"
+    expect "Full"
+    send "\r"                               
+    expect "Room"
+    send "\r"
+    expect "Work"
+    send "\r"
+    expect "Home"
+    send "\r"
+    expect "Other" 
+    send "\r"
+    expect "Is the information correct?"
+    send "Y\r"
+    
+    expect eof
+
+EOD
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Add Admin User Success!"
+	else
+		echo ""
+		echo "Add Admin User Error!"
+	fi
+}
+
+add_guest_user()
+{
+	useradd --no-create-home --user-group guest
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Add Guest User Success!"
+	else
+		echo ""
+		echo "Add Guest User Error!"
+	fi
+}
+
+install_zfs()
+{
+	#
+	# install zfs into kernel 
+	#     
+	#mkdir -p ${TMP_DIR}
+	#cd ${TMP_DIR}
+	
+	#apt-get -y install lsb-release
+	#wget http://archive.zfsonlinux.org/debian/pool/main/z/zfsonlinux/zfsonlinux_6_all.deb
+	#dpkg -i zfsonlinux_6_all.deb
+	
+	#apt-get update
+	#apt-get -y install debian-zfs
+	
+	#if [ $? -eq 0 ];then
+	#	echo ""
+	#	echo "Install ZFS Success!"
+	#else
+	#	echo ""
+	#	echo "Install ZFS Error!"
+	#fi
+	
+	##clean up
+	#cd ..
+	#rm -rf ${TMP_DIR}
+	
+	cd /
+	
+	chkconfig -s zfs-import on
+	chkconfig -s zfs-mount on
+	chkconfig -s zfs-zed on
+	chkconfig -s zfs-share on
+	
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Set ZFS Success!"
+	else
+		echo ""
+		echo "Set ZFS Error!"
+	fi
+}
+
+set_ssdp_autorun()
+{
+	#first method is not good enough
+	#sed "/^exit 0/i${SSDP_RUN_PATH_NAME}" ${AUTORUN_SCRIPT} > ${AUTORUN_SCRIPT_TMP}
+	#mv ${AUTORUN_SCRIPT} ${AUTORUN_SCRIPT_BACKUP}
+	#mv ${AUTORUN_SCRIPT_TMP} ${AUTORUN_SCRIPT}
+
+	#second method is better
+	echo ${SSDP_RUN_PATH_NAME} >> ${AUTORUN_SCRIPT}	
+
+	echo ""
+	echo "Set SSDP Autorun Success!"
+}
+
+set_reset_check_autorun()
+{
+	echo ${RESET_CHECK_RUN_PATH_NAME} >> ${AUTORUN_SCRIPT}	
+
+	echo ""
+	echo "Set Reset Check Autorun Success!"
+}
+
+set_python_web_autorun()
+{
+	#first method is not good enough
+	#sed "/^exit 0/i${PYTHON_WEB_RUN_PATH_NAME} manage.py runserver 0.0.0.0:80" ${AUTORUN_SCRIPT} > ${AUTORUN_SCRIPT_TMP}
+	#mv ${AUTORUN_SCRIPT} ${AUTORUN_SCRIPT_BACKUP}
+	#mv ${AUTORUN_SCRIPT_TMP} ${AUTORUN_SCRIPT}
+
+	#second method is better
+	#echo "LANG=en_US.UTF-8 python ${PYTHON_WEB_RUN_PATH_NAME}manage.py runserver 0.0.0.0:80 &" >> ${AUTORUN_SCRIPT}
+	echo "LANG=en_US.UTF-8 python ${PYTHON_UPDATE_DAEMON_RUN_PATH_NAME}updatedemo.py &" >> ${AUTORUN_SCRIPT}
+	echo "(LANG=en_US.UTF-8 python ${PYTHON_WEB_RUN_PATH_NAME}manage.py runserver 0.0.0.0:80 --insecure)" >> ${AUTORUN_SCRIPT}
+	
+	echo ""
+	echo "Set PYTHON Web Autorun Success!"
+}
+
+install_thunder()
+{
+	#
+	# install 32bit supporting env for 64bit env  
+	#     
+	mkdir -p ${TMP_DIR}
+	cd ${TMP_DIR}
+	
+	apt-get -y install lib32z1
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install 32bit supporting env Success!"
+	else
+		echo ""
+		echo "Install 32bit supporting env Error!"
+	fi
+	
+	#clean up
+	cd ..
+	rm -rf ${TMP_DIR}	
+	
+	cd /
+	useradd --no-create-home --user-group thunder
+	echo t | svn checkout $THUNDER_SVN --username $SVN_NAME --password $SVN_PASSWORD --quiet --no-auth-cache -r $THUNDER_SVN_VERSION
+	chown thunder ${THUNDER_PATH} -R
+	chgrp thunder ${THUNDER_PATH} -R
+	chmod 0777 ${THUNDER_PATH} -R
+	chmod u+s ${THUNDER_PORTAL}
+
+	echo ""
+	echo "Install Thunder Module Success!"
+}
+
+#
+# program starts
+#
+banner "Init Enviroment"
+rm -rf ${TMP_DIR}
+rm -rf ${BACKUP_DEFAULT}
+mkdir ${BACKUP_DEFAULT}
+mkdir ${TMP_DIR}
+cd ${TMP_DIR}
+echo ""
+echo "Init Enviroment Success!"
+
+banner "Set APT Sources List"
+set_apt_sourceslist
+
+banner "Update APT"
+apt-get update
+
+banner "Install Applications"
+install_apps
+
+banner "Install ZFS"
+install_zfs
+
+banner "Install Python"
+install_python
+
+banner "Install SSDP"
+install_ssdp
+
+banner "Install Thunder"
+install_thunder
+
+banner "Arrange Applications Config"
+arrange_apps_config
+
+banner "Add Admin User"
+add_admin_user
+
+banner "Add Guest User"
+add_guest_user
+
+#banner "Set Reset Check Autorun"
+#set_reset_check_autorun
+
+banner "Set SSDP Autorun"
+set_ssdp_autorun
+
+banner "Set PYTHON Web Autorun"
+set_python_web_autorun
+
+banner "Clean APT"
+apt-get clean
+
+banner "Clean Enviroment"
+rm -rf ${TMP_DIR}
+rm -rf ${BACKUP_DEFAULT}
+echo ""
+echo "Clean Enviroment Success!"
+
+banner "Whooo, Finished!"
