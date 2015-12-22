@@ -529,6 +529,26 @@ EOD
 		echo ""
 		echo "Add Admin User Error!"
 	fi
+	
+	#add smb admin
+	/usr/bin/expect << EOD
+	
+	spawn smbpasswd -a ${ROOT_NAME}
+	expect "New SMB password:"
+	send "${ROOT_PASSWORD}\r"
+	expect "Retype new SMB password:"
+	send "${ROOT_PASSWORD}\r"
+	
+	expect eof
+	
+EOD
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Add SMB Admin User Success!"
+	else
+		echo ""
+		echo "Add SMB Admin User Error!"
+	fi
 }
 
 add_guest_user()
