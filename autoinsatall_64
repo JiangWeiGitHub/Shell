@@ -10,8 +10,6 @@ AUTORUN_SCRIPT=/etc/init.d/rc.local
 FTP_DEFAULT_NAME=proftpd.conf
 UPDATE_VERSION_DEFAULT_NAME=version
 UPDATE_GUIDE_DEFAULT_NAME=mininasupguide.sh
-RESET_GUIDE_DEFAULT_NAME=mininasrfsguide.sh
-RESET_CHECK_DEFAULT_NAME=mininasrfsstatuscheck.sh
 CMDLINE_DEFAULT_NAME=cmdline
 SAMBA_DEFAULT_NAME=smb.conf
 #TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
@@ -33,9 +31,6 @@ OPERATE_WITHOUT_EXPECT_DEFAULT_NAME=operate_without_expect.sh
 FTP_DEFAULT_PATH=/etc/proftpd/
 UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
 UPDATE_GUIDE_DEFAULT_PATH=/etc/mininas/update/
-RESET_GUIDE_DEFAULT_PATH=/etc/mininas/rfs/
-RESET_CHECK_DEFAULT_PATH=/etc/mininas/rfs/
-RESET_CHECK_RUN_PATH_NAME=/etc/mininas/rfs/mininasrfsstatuscheck.sh
 CMDLINE_DEFAULT_PATH=/boot/
 SAMBA_DEFAULT_PATH=/etc/samba/
 #TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
@@ -53,6 +48,9 @@ WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH=/usr/local/bin/
 UPDATEDVERSION_DEFAULT_PATH=/etc/mininas/
 REBOOT_DJANGO_DEFAULT_PATH=/usr/local/sbin/
 OPERATE_WITHOUT_EXPECT_DEFAULT_PATH=/usr/local/sbin/
+
+MYSQL_DATA_DEFAULT_PATH=/var/lib/mysql/
+MYSQL_DATA_NOW_PATH=/etc/mininas/data/
 
 SSDP_RUN_PATH=/usr/local/sbin/
 SSDP_RUN_PATH_NAME=/usr/local/sbin/ssdp
@@ -136,7 +134,7 @@ install_apps()
 	mkdir -p ${TMP_DIR}
 	cd ${TMP_DIR}
 
-	apt-get -y --force-yes install subversion expect python python-django python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo libusb-1.0-0 libusb-1.0-0-dev
+	apt-get -y --force-yes install subversion expect python python-django python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo btrfs-tools libusb-1.0-0 libusb-1.0-0-dev
 	
 	#jessie has no proper repository for netatalk right now!
 	#apt-get -y --force-yes install netatalk
@@ -214,28 +212,6 @@ arrange_apps_config()
 	else
 		echo ""
 		echo "Install Update Guide Config Error!"
-	fi
-
-	mkdir -p ${RESET_GUIDE_DEFAULT_PATH}
-	mv ${RESET_GUIDE_DEFAULT_NAME} ${RESET_GUIDE_DEFAULT_PATH}
-	chmod 755 "${RESET_GUIDE_DEFAULT_PATH}/${RESET_GUIDE_DEFAULT_NAME}"
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Install Reset Guide Config Success!"
-	else
-		echo ""
-		echo "Install Reset Guide Config Error!"
-	fi
-
-	mkdir -p ${RESET_CHECK_DEFAULT_PATH}
-	mv ${RESET_CHECK_DEFAULT_NAME} ${RESET_CHECK_DEFAULT_PATH}
-	chmod 755 "${RESET_CHECK_DEFAULT_PATH}/${RESET_CHECK_DEFAULT_NAME}"
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Install Reset Check Config Success!"
-	else
-		echo ""
-		echo "Install Reset Check Config Error!"
 	fi
 	
 	mkdir -p ${CMDLINE_DEFAULT_PATH}
@@ -437,6 +413,12 @@ arrange_apps_config()
 	rm -rf ${TMP_DIR}
 }
 
+MYSQL_DATA_DEFAULT_PATH
+deploy_mysql_data_path
+{
+
+}
+
 install_python()
 {
 	mkdir -p ${TMP_DIR}
@@ -501,22 +483,22 @@ add_admin_user()
 	/usr/bin/expect << EOD
 
 	spawn adduser ${ROOT_NAME} --no-create-home
-    expect "New password:"
-    send "${ROOT_PASSWORD}\r"
-    expect "Retype new password:"
-    send "${ROOT_PASSWORD}\r"
-    expect "Full"
-    send "\r"                               
-    expect "Room"
-    send "\r"
-    expect "Work"
-    send "\r"
-    expect "Home"
-    send "\r"
-    expect "Other" 
-    send "\r"
-    expect "Is the information correct?"
-    send "Y\r"
+	expect "New password:"
+	send "${ROOT_PASSWORD}\r"
+	expect "Retype new password:"
+	send "${ROOT_PASSWORD}\r"
+	expect "Full"
+	send "\r"                               
+	expect "Room"
+	send "\r"
+	expect "Work"
+	send "\r"
+	expect "Home"
+	send "\r"
+	expect "Other" 
+	send "\r"
+	expect "Is the information correct?"
+	send "Y\r"
     
     expect eof
 
@@ -576,14 +558,6 @@ set_ssdp_autorun()
 
 	echo ""
 	echo "Set SSDP Autorun Success!"
-}
-
-set_reset_check_autorun()
-{
-	echo ${RESET_CHECK_RUN_PATH_NAME} >> ${AUTORUN_SCRIPT}	
-
-	echo ""
-	echo "Set Reset Check Autorun Success!"
 }
 
 set_python_web_autorun()
