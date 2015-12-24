@@ -18,12 +18,6 @@ DLNA_DEFAULT_NAME=minidlna.conf
 LASTEST_UPDATE_VERSION_DEFAULT_NAME=luv
 HARDVERSION_DEFAULT_NAME=hardversion
 UPDATE_STATUS_DEFAULT_NAME=updatestatus.txt
-UPDATED_STARTER_SERVER_DEFAULT_NAME=updated-starter-server
-UPDATED_STARTER_DEFAULT_NAME=updated_starter.sh
-UPDATED_STARTER_CRON_DEFAULT_NAME=updated-starter-cron.sh
-POWERKEY_CHK_DEFAULT_NAME=powerkey_chk.sh
-WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME=ws_script_gpio_server
-WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_NAME=ws_script_gpio_server_cron.sh
 UPDATEDVERSION_DEFAULT_NAME=updatedversion
 REBOOT_DJANGO_DEFAULT_NAME=reboot_django.sh
 OPERATE_WITHOUT_EXPECT_DEFAULT_NAME=operate_without_expect.sh
@@ -39,12 +33,6 @@ DLNA_DEFAULT_PATH=/etc/
 LASTEST_UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
 HARDVERSION_DEFAULT_PATH=/etc/mininas/
 UPDATE_STATUS_DEFAULT_PATH=/mnt/
-UPDATED_STARTER_SERVER_DEFAULT_PATH=/etc/init.d/
-UPDATED_STARTER_DEFAULT_PATH=/usr/local/bin/
-UPDATED_STARTER_CRON_DEFAULT_PATH=/usr/local/bin/
-POWERKEY_CHK_DEFAULT_PATH=/usr/local/bin/
-WS_SCRIPT_GPIO_SERVER_DEFAULT_PATH=/etc/init.d/
-WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH=/usr/local/bin/
 UPDATEDVERSION_DEFAULT_PATH=/etc/mininas/
 REBOOT_DJANGO_DEFAULT_PATH=/usr/local/sbin/
 OPERATE_WITHOUT_EXPECT_DEFAULT_PATH=/usr/local/sbin/
@@ -295,83 +283,6 @@ arrange_apps_config()
 		echo "Install Updated Status Config Error!"
 	fi
 
-	mv ${UPDATED_STARTER_SERVER_DEFAULT_NAME} ${UPDATED_STARTER_SERVER_DEFAULT_PATH}
-	chmod 755 "${UPDATED_STARTER_SERVER_DEFAULT_PATH}/${UPDATED_STARTER_SERVER_DEFAULT_NAME}"
-	chkconfig -a ${UPDATED_STARTER_SERVER_DEFAULT_NAME}
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Install Updated Starter Server Success!"
-	else
-		echo ""
-		echo "Install Updated Starter Server Error!"
-	fi
-	
-	mv ${UPDATED_STARTER_DEFAULT_NAME} ${UPDATED_STARTER_DEFAULT_PATH}
-	chmod 755 "${UPDATED_STARTER_DEFAULT_PATH}/${UPDATED_STARTER_DEFAULT_NAME}"
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Install Updated Starter Success!"
-	else
-		echo ""
-		echo "Install Updated Starter Error!"
-	fi	
-	
-	mv ${UPDATED_STARTER_CRON_DEFAULT_NAME} ${UPDATED_STARTER_CRON_DEFAULT_PATH}
-	chmod 755 "${UPDATED_STARTER_CRON_DEFAULT_PATH}/${UPDATED_STARTER_CRON_DEFAULT_NAME}"
-	
-	echo ""
-	echo "*/10 * * * * /usr/local/bin/updated-starter-cron.sh"
-	echo ""	
-	crontab -e
-	
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Set Updated Starter Cron Success!"
-	else
-		echo ""
-		echo "Set Updated Starter Cron Error!"
-	fi
-	
-	mv ${POWERKEY_CHK_DEFAULT_NAME} ${POWERKEY_CHK_DEFAULT_PATH}
-	chmod 755 "${POWERKEY_CHK_DEFAULT_PATH}/${POWERKEY_CHK_DEFAULT_NAME}"
-	
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Set Powerkey CHK Success!"
-	else
-		echo ""
-		echo "Set Powerkey CHK Error!"
-	fi
-	
-	mv ${WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME} ${WS_SCRIPT_GPIO_SERVER_DEFAULT_PATH}
-	chmod 755 "${WS_SCRIPT_GPIO_SERVER_DEFAULT_PATH}/${WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME}"
-	
-	chkconfig -a ${WS_SCRIPT_GPIO_SERVER_DEFAULT_NAME}
-	
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Set WS Script GPIO Server Success!"
-	else
-		echo ""
-		echo "Set WS Script GPIO Server Error!"
-	fi
-
-	mv ${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_NAME} ${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH}
-	chmod 755 "${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_PATH}/${WS_SCRIPT_GPIO_SERVER_CRON_DEFAULT_NAME}"
-	
-	echo ""
-	echo "*/10 * * * * /usr/local/bin/ws_script_gpio_server_cron.sh"
-	echo ""	
-	crontab -e
-	
-	if [ $? -eq 0 ];then
-		echo ""
-		echo "Set WS Script GPIO Server Cron Success!"
-	else
-		echo ""
-		echo "Set WS Script GPIO Server Cron Error!"
-	fi
-	
 	mv ${UPDATEDVERSION_DEFAULT_NAME} ${UPDATEDVERSION_DEFAULT_PATH}
 	chmod 755 "${UPDATEDVERSION_DEFAULT_PATH}/${UPDATEDVERSION_DEFAULT_NAME}"
 	
