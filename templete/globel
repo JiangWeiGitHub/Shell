@@ -15,7 +15,6 @@
    passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
    pam password change = yes
    public = yes
-   map to guest = bad user
-   #usershare allow guests = yes
-   security = share
+   map to guest = %%map_to_guest%%
+   security = %%security%%
    guest account = guest

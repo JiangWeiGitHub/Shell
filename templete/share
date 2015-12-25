@@ -1,4 +1,4 @@
-[share]
+[%%share%%]
    comment = %%comment%%
    path = %%path%%
    read only = No
