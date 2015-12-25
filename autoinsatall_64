@@ -6,14 +6,13 @@
 APT_SOURCES_LIST=/etc/apt/sources.list
 AUTORUN_SCRIPT=/etc/init.d/rc.local
 
-#jessie has no proper repository for netatalk right now!
 FTP_DEFAULT_NAME=proftpd.conf
 UPDATE_VERSION_DEFAULT_NAME=version
 UPDATE_GUIDE_DEFAULT_NAME=mininasupguide.sh
 CMDLINE_DEFAULT_NAME=cmdline
 SAMBA_DEFAULT_NAME=smb.conf
-#TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
-#TIMEMACHINE_RELY_DEFAULT_NAME=avahi-daemon.conf
+TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
+TIMEMACHINE_RELY_DEFAULT_NAME=avahi-daemon.conf
 DLNA_DEFAULT_NAME=minidlna.conf
 LASTEST_UPDATE_VERSION_DEFAULT_NAME=luv
 HARDVERSION_DEFAULT_NAME=hardversion
@@ -27,8 +26,8 @@ UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
 UPDATE_GUIDE_DEFAULT_PATH=/etc/mininas/update/
 CMDLINE_DEFAULT_PATH=/boot/
 SAMBA_DEFAULT_PATH=/etc/samba/
-#TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
-#TIMEMACHINE_RELY_DEFAULT_PATH=/etc/avahi/
+TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
+TIMEMACHINE_RELY_DEFAULT_PATH=/etc/avahi/
 DLNA_DEFAULT_PATH=/etc/
 LASTEST_UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
 HARDVERSION_DEFAULT_PATH=/etc/mininas/
@@ -37,8 +36,8 @@ UPDATEDVERSION_DEFAULT_PATH=/etc/mininas/
 REBOOT_DJANGO_DEFAULT_PATH=/usr/local/sbin/
 OPERATE_WITHOUT_EXPECT_DEFAULT_PATH=/usr/local/sbin/
 
-MYSQL_DATA_DEFAULT_PATH=/var/lib/mysql/
-MYSQL_DATA_NOW_PATH=/etc/mininas/data/
+#MYSQL_DATA_DEFAULT_PATH=/var/lib/mysql/
+#MYSQL_DATA_NOW_PATH=/etc/mininas/data/
 
 SSDP_RUN_PATH=/usr/local/sbin/
 SSDP_RUN_PATH_NAME=/usr/local/sbin/ssdp
@@ -112,6 +111,7 @@ set_apt_sourceslist()
 	echo "deb http://mirrors.aliyun.com/debian-security/ jessie/updates main contrib non-free" >> $APT_SOURCES_LIST
 	echo "deb http://mirrors.aliyun.com/debian/ jessie-updates main contrib non-free" >> $APT_SOURCES_LIST
 	echo "deb http://mirrors.aliyun.com/debian/ jessie-backports main contrib non-free" >> $APT_SOURCES_LIST
+	echo "deb http://mirrors.aliyun.com/debian/ sid main contrib non-free" >> $APT_SOURCES_LIST
 
 	echo ""
 	echo "Set APT SourcesList Success!"
@@ -124,8 +124,7 @@ install_apps()
 
 	apt-get -y --force-yes install subversion expect python python-django python-setuptools python-pip python-mysql.connector python-dev python-libtorrent libmysqlclient-dev python-mysqldb python-psutil python-imaging openssh-server proftpd-basic samba curl acl chkconfig minidlna avahi-daemon sudo btrfs-tools libusb-1.0-0 libusb-1.0-0-dev
 	
-	#jessie has no proper repository for netatalk right now!
-	#apt-get -y --force-yes install netatalk
+	apt-get -y --force-yes install netatalk
 
 	#install mysql
 	echo "mysql-server-5.5 mysql-server/root_password password ${MYSQL_PASSWORD}" | debconf-set-selections
@@ -223,25 +222,25 @@ arrange_apps_config()
 		echo "Install Samba Config Error!"
 	fi
 
-	#mv ${TIMEMACHINE_DEFAULT_NAME} ${TIMEMACHINE_DEFAULT_PATH}
-	#chmod 644 "${TIMEMACHINE_DEFAULT_PATH}/${TIMEMACHINE_DEFAULT_NAME}"
-	#if [ $? -eq 0 ];then
-	#	echo ""
-	#	echo "Install TimeMachine Config Success!"
-	#else
-	#	echo ""
-	#	echo "Install TimeMachine Config Error!"
-	#fi
+	mv ${TIMEMACHINE_DEFAULT_NAME} ${TIMEMACHINE_DEFAULT_PATH}
+	chmod 644 "${TIMEMACHINE_DEFAULT_PATH}/${TIMEMACHINE_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install TimeMachine Config Success!"
+	else
+		echo ""
+		echo "Install TimeMachine Config Error!"
+	fi
 
-	#mv ${TIMEMACHINE_RELY_DEFAULT_NAME} ${TIMEMACHINE_RELY_DEFAULT_PATH}
-	#chmod 644 "${TIMEMACHINE_RELY_DEFAULT_PATH}/${TIMEMACHINE_RELY_DEFAULT_NAME}"
-	#if [ $? -eq 0 ];then
-	#	echo ""
-	#	echo "Install TimeMachine Rely Config Success!"
-	#else
-	#	echo ""
-	#	echo "Install TimeMachine Rely Config Error!"
-	#fi
+	mv ${TIMEMACHINE_RELY_DEFAULT_NAME} ${TIMEMACHINE_RELY_DEFAULT_PATH}
+	chmod 644 "${TIMEMACHINE_RELY_DEFAULT_PATH}/${TIMEMACHINE_RELY_DEFAULT_NAME}"
+	if [ $? -eq 0 ];then
+		echo ""
+		echo "Install TimeMachine Rely Config Success!"
+	else
+		echo ""
+		echo "Install TimeMachine Rely Config Error!"
+	fi
 
 	mv ${DLNA_DEFAULT_NAME} ${DLNA_DEFAULT_PATH}
 	chmod 644 "${DLNA_DEFAULT_PATH}/${DLNA_DEFAULT_NAME}"
@@ -322,12 +321,6 @@ arrange_apps_config()
 	#clean up
 	cd ..
 	rm -rf ${TMP_DIR}
-}
-
-MYSQL_DATA_DEFAULT_PATH
-deploy_mysql_data_path
-{
-
 }
 
 install_python()
