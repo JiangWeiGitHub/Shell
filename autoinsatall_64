@@ -16,8 +16,6 @@ SAMBA_DEFAULT_NAME=smb.conf
 TIMEMACHINE_DEFAULT_NAME=AppleVolumes.default
 TIMEMACHINE_RELY_DEFAULT_NAME=avahi-daemon.conf
 DLNA_DEFAULT_NAME=minidlna.conf
-#IP_DEFAULT_NAME=interfaces
-#DNS_DEFAULT_NAME=resolv.conf
 LASTEST_UPDATE_VERSION_DEFAULT_NAME=luv
 HARDVERSION_DEFAULT_NAME=hardversion
 UPDATE_STATUS_DEFAULT_NAME=updatestatus.txt
@@ -42,8 +40,6 @@ SAMBA_DEFAULT_PATH=/etc/samba/
 TIMEMACHINE_DEFAULT_PATH=/etc/netatalk/
 TIMEMACHINE_RELY_DEFAULT_PATH=/etc/avahi/
 DLNA_DEFAULT_PATH=/etc/
-#IP_DEFAULT_PATH=/etc/network/
-#DNS_DEFAULT_PATH=/etc/
 LASTEST_UPDATE_VERSION_DEFAULT_PATH=/etc/mininas/
 HARDVERSION_DEFAULT_PATH=/etc/mininas/
 UPDATE_STATUS_DEFAULT_PATH=/mnt/
@@ -60,37 +56,26 @@ OPERATE_WITHOUT_EXPECT_DEFAULT_PATH=/usr/local/sbin/
 SSDP_RUN_PATH=/usr/local/sbin/
 SSDP_RUN_PATH_NAME=/usr/local/sbin/ssdp
 
-#PYTHON_SVN=https://192.168.5.40/svn/PythonWebProject/trunk
-#UGLY_PYTHON_SVN_HEADER=trunk
 PYTHON_SVN=https://192.168.5.40/svn/PythonWebProject/branches/release 
 PYTHON_SVN_VERSION=1194
 UGLY_PYTHON_SVN_HEADER=release
 
 PYTHON_PATH=/srv/mini/
 PYTHON_PATH_UGLY=/srv/mini/aaa/
-#PYTHON_WEB_RUN_PATH_NAME=python /srv/mini/aaa/manage.py runserver 0.0.0.0:80 &
 PYTHON_WEB_RUN_PATH_NAME=/srv/mini/aaa/
 PYTHON_UPDATE_DAEMON_RUN_PATH_NAME=/srv/mini/
 
 SETUPTOOLS_SOURCE_PATH=http://mirrors.aliyun.com/pypi/simple/
 
-#THUNDER_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/tags/system1.1/xware
 THUNDER_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/release/xware
 THUNDER_SVN_VERSION=158
 THUNDER_PATH=/xware
 THUNDER_PORTAL=/xware/portal
 
-#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/tags/system1.1/configureBack
-#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/trunk/configureBack
-#CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/release/configureBack
 CONFIG_SVN=https://192.168.5.40/svn/MiniNas-SO-3.0/branches/stage/configureBack
 CONFIG_SVN_VERSION=196
 UGLY_CONFIG_SVN_HEADER=configureBack
 
-#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/tags/ssdp1.0.0/build
-#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/trunk
-#UGLY_SSDP_SVN_HEADER=trunk
-#SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/branches/release
 SSDP_SVN=https://192.168.5.40/svn/SSDP-MiniNAS/branches/stage
 SSDP_SVN_VERSION=45
 UGLY_SSDP_SVN_HEADER=stage
