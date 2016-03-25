@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Create 10 files & folders with specific path
+# $1: path for whole files & folders root folder
+
+if [ $# -ne 1 ]
+then
+    echo "Bad format: you have to point the path!"
+    exit 99
+fi
+
 path=`pwd`
 
 mkdir -p $1
