@@ -3,21 +3,21 @@
 # Create files & folders with specific xattr
 # $1: path for whole files & folders root folder
 
-tree:
-├── 1
-│   ├── 12.txt
-│   └── 5
-├── 11.txt
-├── 2
-│   └── 6
-│       ├── 12.txt
-│       └── 7
-├── 3
-│   └── 6
-│       └── 9
-│           ├── 10
-│           └── 12.txt
-└── 4
+# tree:
+# ├── 1
+# │   ├── 12.txt
+# │   └── 5
+# ├── 11.txt
+# ├── 2
+# │   └── 6
+# │       ├── 12.txt
+# │       └── 7
+# ├── 3
+# │   └── 6
+# │       └── 9
+# │           ├── 10
+# │           └── 12.txt
+# └── 4
 
 admin_uuid="35fd79b7-a4fe-4be5-a525-c5faf9749bd4"
 
