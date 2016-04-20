@@ -392,6 +392,12 @@ function scandir(){
     for dirlist in $(ls ${cur_dir})
     do
         if test -d ${dirlist};then
+            setFolderHashXattr ${dirlist}
+            setUUIDXattr ${dirlist} "7a7c1334-01f3-437d-8088-5e628afb6242"
+            setFolderTypeXattr ${dirlist}
+            setOwnerListXattr ${dirlist} " "
+            setReadListXattr ${dirlist} "$admin_uuid"
+            setWriteListXattr ${dirlist} "$admin_uuid"
             cd ${dirlist}
             scandir ${cur_dir}/${dirlist}
             cd ..
