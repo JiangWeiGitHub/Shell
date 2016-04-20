@@ -395,7 +395,7 @@ function scandir(){
             setFolderHashXattr ${dirlist}
             setUUIDXattr ${dirlist} "7a7c1334-01f3-437d-8088-5e628afb6242"
             setFolderTypeXattr ${dirlist}
-            setOwnerListXattr ${dirlist} " "
+            setOwnerListXattr ${dirlist} "$admin_uuid"
             setReadListXattr ${dirlist} "$admin_uuid"
             setWriteListXattr ${dirlist} "$admin_uuid"
             cd ${dirlist}
