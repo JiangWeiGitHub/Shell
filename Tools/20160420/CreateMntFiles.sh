@@ -393,7 +393,7 @@ function scandir(){
     do
         if test -d ${dirlist};then
             setFolderHashXattr ${dirlist}
-            setUUIDXattr ${dirlist} "7a7c1334-01f3-437d-8088-5e628afb6242"
+            setUUIDXattr ${dirlist} /proc/sys/kernel/random/uuid
             setFolderTypeXattr ${dirlist}
             setOwnerListXattr ${dirlist} "$admin_uuid"
             setReadListXattr ${dirlist} "$admin_uuid"
@@ -403,7 +403,7 @@ function scandir(){
             cd ..
         else
             setFileHashXattr ${cur_dir}/${dirlist}
-            setUUIDXattr ${cur_dir}/${dirlist} "6737651f-1420-4696-b6f7-76fba07d95b3"
+            setUUIDXattr ${cur_dir}/${dirlist} /proc/sys/kernel/random/uuid
             setFileTypeXattr ${cur_dir}/${dirlist}
             setOwnerListXattr ${cur_dir}/${dirlist} "$admin_uuid"
             setReadListXattr ${cur_dir}/${dirlist} " "
